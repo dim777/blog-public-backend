@@ -1,7 +1,11 @@
 package ru.ineb.pub.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -12,17 +16,26 @@ import java.util.Arrays;
  * Please see distribution for license.
  */
 @Data
+@Document
 public class Article {
-    @Id
-    private Long id;
+/*    @Id
+    @JsonIgnore
+    private ObjectId _id;*/
+
     private String title;
+
+    @Indexed(unique = true)
     private String alias;
+
     private String fulltext;
-    private LocalDateTime created;
+
+    private String created;
+
     private Boolean publish;
-    private User createdBy;
+
+    private String createdBy;
+
     private Byte[] image;
+
     private Lang language;
-
-
 }
