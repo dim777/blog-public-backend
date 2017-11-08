@@ -1,6 +1,8 @@
 package ru.ineb.pub.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -18,9 +20,8 @@ import java.util.Arrays;
 @Data
 @Document
 public class Article {
-/*    @Id
-    @JsonIgnore
-    private ObjectId _id;*/
+    @Id
+    private Long id;
 
     private String title;
 
@@ -38,4 +39,43 @@ public class Article {
     private Byte[] image;
 
     private Lang language;
+
+    public Article id(Long id){
+        this.id = id;
+        return this;
+    }
+
+    public Article title(String title){
+        this.title = title;
+        return this;
+    }
+    public Article alias(String alias){
+        this.alias = alias;
+        return this;
+    }
+    public Article fulltext(String fulltext){
+        this.fulltext = fulltext;
+        return this;
+    }
+    public Article created(String created){
+        this.created = created;
+        return this;
+    }
+    public Article publish(Boolean publish){
+        this.publish = publish;
+        return this;
+    }
+    public Article createdBy(String createdBy){
+        this.createdBy = createdBy;
+        return this;
+    }
+    public Article image(Byte[] image){
+        this.image = image;
+        return this;
+    }
+    public Article language(Lang language){
+        this.language = language;
+        return this;
+    }
+
 }

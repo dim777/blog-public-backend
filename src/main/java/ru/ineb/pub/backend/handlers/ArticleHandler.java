@@ -1,27 +1,26 @@
 package ru.ineb.pub.backend.handlers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.reactive.function.BodyExtractor;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
-import static org.springframework.web.reactive.function.BodyExtractors.toFormData;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Component
 public class ArticleHandler {
+    private static final Logger log = LoggerFactory.getLogger(ArticleHandler.class);
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -40,14 +39,26 @@ public class ArticleHandler {
     }
 
     public Mono<ServerResponse> createArticle(ServerRequest request) {
-        Mono<Article> articleMono = request.bodyToMono(Article.class);
-        return ServerResponse.ok().build(articleRepository.save(articleMono));
-    }
+        /*Article article = articleRepository.findById(Mono.just(1L))
+                .block();
+*/
 
-    public Mono<ServerResponse> createArticleFromJsonObject(ServerRequest request) {
+        /*Flux<Article> articles = request.bodyToFlux(Article.class);
+        articleRepository.saveAll(articles).subscribe();
 
-        Mono<Article> article = request.bodyToMono(Article.class);
-        article.
-        return ServerResponse.ok().build(articleRepository.saveArticle(article));
+        articleRepository.count() //
+                .doOnNext(System.out::println) //
+                .thenMany(articleRepository.saveAll(articles)) //
+                .last() //
+                .flatMap(v -> articleRepository.count()) //
+                .doOnNext(System.out::println) //
+                .doOnSuccess(it -> System.out.println(it)) //
+                .doOnError(throwable -> System.out.println(throwable)) //
+                .subscribe();
+
+        return ServerResponse.ok().build();*/
+        Flux<Article> article = request.bodyToFlux(Article.class);
+        articleRepository.insert(article).subscribe();
+        return ServerResponse.ok().build();
     }
 }

@@ -1,10 +1,13 @@
 package ru.ineb.pub.backend;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.mongodb.core.CollectionOptions;
+import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -12,12 +15,15 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.model.Lang;
+import ru.ineb.pub.backend.repository.ArticleRepository;
 
-import java.time.LocalDateTime;
+import java.util.concurrent.CountDownLatch;
 
+import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -25,8 +31,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ActiveProfiles("test")
 public class PublicBackendApplicationTests {
 
-	@Autowired
-	private WebTestClient webTestClient;
+	@Autowired WebTestClient webTestClient;
+
+	@Autowired ReactiveMongoOperations operations;
+	@Autowired ArticleRepository articleRepository;
+
+	@Before
+	public void setUp() {
+
+		operations.collectionExists(Article.class) //
+				.flatMap(exists -> exists ? operations.dropCollection(Article.class) : Mono.just(exists)) //
+				.flatMap(o -> operations.createCollection(Article.class, CollectionOptions.empty().size(1024 * 1024).maxDocuments( 100).capped())) //
+				.then() //
+				.block();
+
+		articleRepository
+				.saveAll(Flux.just(
+						new Article().id(1L).alias("sdsdsd").created("sdsdsd"), //
+						new Article().id(2L).alias("seeeffv").created("asasasa"), //
+						new Article().id(3L).alias("vvvvvbb").created("ccxcxdf"))) //
+				.then() //
+				.block();
+
+	}
 
 	@Test
 	public void givenRouter_whenGetArticles_thenGotArticlesList() {
@@ -64,13 +91,18 @@ public class PublicBackendApplicationTests {
 				.isOk();
 	}
 
+	/**
+	 * Test RESTful API
+	 */
 	@Test
-	public void givenNewArticle_whenDataIsValid_thenSuccess(){
-		Article article = new Article();
-		article.setTitle("Title 1");
-		article.setAlias("title-1");
+	public void givenNewArticle_whenDataIsValid_thenSuccess() throws InterruptedException {
+		CountDownLatch countDownLatch = new CountDownLatch(1);
+
+		Article article = new Article().id(4L);
+		article.setTitle("Title 2");
+		article.setAlias("title-2");
 		article.setFulltext("Fulltext fulltext");
-		article.setCreated("01-01-2017");
+		article.setCreated("01-02-2017");
 		article.setPublish(true);
 		article.setCreatedBy("dim777");
 		article.setImage(null);
@@ -78,10 +110,10 @@ public class PublicBackendApplicationTests {
 
 		webTestClient.post()
 				.uri("/article/json")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.body(Mono.just(article), Article.class)
+				.body(fromObject(article))
 				.exchange()
 				.expectStatus().isOk();
+
 		/*
 		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
                 .expectBody()
