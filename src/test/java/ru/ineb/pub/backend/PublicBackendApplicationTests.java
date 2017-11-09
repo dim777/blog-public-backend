@@ -95,10 +95,9 @@ public class PublicBackendApplicationTests {
 	 * Test RESTful API
 	 */
 	@Test
-	public void givenNewArticle_whenDataIsValid_thenSuccess() throws InterruptedException {
-		CountDownLatch countDownLatch = new CountDownLatch(1);
-
-		Article article = new Article().id(4L);
+	public void givenNewArticle_whenDataIsValid_thenSuccess(){
+		Article article = new Article();
+		article.setId(4L);
 		article.setTitle("Title 2");
 		article.setAlias("title-2");
 		article.setFulltext("Fulltext fulltext");
@@ -113,11 +112,5 @@ public class PublicBackendApplicationTests {
 				.body(fromObject(article))
 				.exchange()
 				.expectStatus().isOk();
-
-		/*
-		.expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
-                .expectBody()
-                .jsonPath("$.text").isEqualTo("Updated Tweet");
-		 */
 	}
 }

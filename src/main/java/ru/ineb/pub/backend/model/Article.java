@@ -1,16 +1,12 @@
 package ru.ineb.pub.backend.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 /**
  * Created by Dmitry.Erohin dim777@ya.ru on 07.03.2017.
@@ -23,9 +19,13 @@ public class Article {
     @Id
     private Long id;
 
+    @NotBlank
+    @Size(max = 200)
     private String title;
 
     @Indexed(unique = true)
+    @NotBlank
+    @Size(max = 300)
     private String alias;
 
     private String fulltext;
@@ -77,5 +77,4 @@ public class Article {
         this.language = language;
         return this;
     }
-
 }

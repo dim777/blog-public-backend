@@ -11,9 +11,6 @@ import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -21,6 +18,7 @@ import static org.springframework.web.reactive.function.server.ServerResponse.ok
 @Component
 public class ArticleHandler {
     private static final Logger log = LoggerFactory.getLogger(ArticleHandler.class);
+    static Integer i;
 
     @Autowired
     private ArticleRepository articleRepository;
@@ -38,25 +36,9 @@ public class ArticleHandler {
                 .body(articleRepository.findAll().take(size), Article.class);
     }
 
+
+
     public Mono<ServerResponse> createArticle(ServerRequest request) {
-        /*Article article = articleRepository.findById(Mono.just(1L))
-                .block();
-*/
-
-        /*Flux<Article> articles = request.bodyToFlux(Article.class);
-        articleRepository.saveAll(articles).subscribe();
-
-        articleRepository.count() //
-                .doOnNext(System.out::println) //
-                .thenMany(articleRepository.saveAll(articles)) //
-                .last() //
-                .flatMap(v -> articleRepository.count()) //
-                .doOnNext(System.out::println) //
-                .doOnSuccess(it -> System.out.println(it)) //
-                .doOnError(throwable -> System.out.println(throwable)) //
-                .subscribe();
-
-        return ServerResponse.ok().build();*/
         Flux<Article> article = request.bodyToFlux(Article.class);
         articleRepository.insert(article).subscribe();
         return ServerResponse.ok().build();
