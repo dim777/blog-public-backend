@@ -3,7 +3,6 @@ package ru.ineb.pub.backend;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.CollectionOptions;
@@ -21,10 +20,8 @@ import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.model.Lang;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
-import java.util.concurrent.CountDownLatch;
-
-import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -65,7 +62,7 @@ public class PublicBackendApplicationTests {
 				.expectStatus().isOk()
 				.expectHeader().contentType(MediaType.APPLICATION_JSON)
 				.expectBodyList(Article.class)
-				.hasSize(2)
+				.hasSize(3)
 				.consumeWith(allArticles -> assertThat(allArticles)
 						.satisfies(article -> assertThat(article.getResponseBody().size()).isPositive()));
 
@@ -84,7 +81,7 @@ public class PublicBackendApplicationTests {
 		formData.add("language", "RU");
 
 		webTestClient.post().uri("/article")
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.body(BodyInserters.fromFormData(formData))
 				.exchange()
 				.expectStatus()
