@@ -9,9 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
-import ru.ineb.pub.backend.model.wrapper.ArticlesWrapper;
 import ru.ineb.pub.backend.repository.ArticleRepository;
-import ru.ineb.pub.backend.services.ArticleServices;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
@@ -24,26 +22,17 @@ public class ArticleHandler {
 
     @Autowired private ArticleRepository articleRepository;
 
-    @Autowired private ArticleServices articleServices;
-
     public Mono<ServerResponse> streamArticles(ServerRequest request) {
         return ok()
                 .contentType(APPLICATION_STREAM_JSON)
                 .body(articleRepository.findAll(), Article.class);
     }
 
-    /*public Mono<ServerResponse> fetchArticles(ServerRequest request) {
-        int size = Integer.parseInt(request.queryParam("size").orElse("10"));
-        return ok()
-                .contentType(APPLICATION_JSON)
-                .body(articleRepository.findAll().take(size), Article.class);
-    }*/
-
     public Mono<ServerResponse> fetchArticles(ServerRequest request) {
         int size = Integer.parseInt(request.queryParam("size").orElse("10"));
         return ok()
                 .contentType(APPLICATION_JSON)
-                .body(Mono.just(articleServices.getArticlesLimit(size)), ArticlesWrapper.class);
+                .body(articleRepository.findAll().take(size), Article.class);
     }
 
 
