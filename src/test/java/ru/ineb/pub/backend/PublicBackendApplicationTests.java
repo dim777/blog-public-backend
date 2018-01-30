@@ -44,9 +44,9 @@ public class PublicBackendApplicationTests {
 
 		articleRepository
 				.saveAll(Flux.just(
-						new Article().id(1L).alias("sdsdsd").created("sdsdsd"), //
-						new Article().id(2L).alias("seeeffv").created("asasasa"), //
-						new Article().id(3L).alias("vvvvvbb").created("ccxcxdf"))) //
+						new Article().id(1L).alias("talias-1").created("sdsdsd"), //
+						new Article().id(2L).alias("talias-2").created("asasasa"), //
+						new Article().id(3L).alias("talias-3").created("ccxcxdf"))) //
 				.then() //
 				.block();
 
@@ -109,5 +109,17 @@ public class PublicBackendApplicationTests {
 				.body(fromObject(article))
 				.exchange()
 				.expectStatus().isOk();
+	}
+
+	@Test
+	public void givenArticleAlias_thenGetArticle() {
+		webTestClient
+				// We then create a GET request to test an endpoint
+				.get().uri("/article?alias=alias-1")
+				.accept(MediaType.APPLICATION_JSON)
+				.exchange()
+				.expectStatus().isOk()
+				.expectHeader().contentType(MediaType.APPLICATION_JSON)
+				.expectBody(Article.class);
 	}
 }

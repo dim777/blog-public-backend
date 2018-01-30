@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
+import java.util.MissingFormatArgumentException;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
@@ -40,5 +42,12 @@ public class ArticleHandler {
         Flux<Article> article = request.bodyToFlux(Article.class);
         articleRepository.insert(article).subscribe();
         return ServerResponse.ok().build();
+    }
+
+    public Mono<ServerResponse> fetchArticle(ServerRequest request) {
+        String alias = request.queryParam("alias").orElseThrow(()-> new IllegalArgumentException("Alias param is not set."));
+        return ok()
+                .contentType(APPLICATION_JSON)
+                .body(articleRepository.findByAlias(alias), Article.class);
     }
 }

@@ -33,7 +33,8 @@ public class ArticleRouter {
                                 .then(ok().build()));*/
 
          return RouterFunctions
-                .route(GET("/articles").and(accept(APPLICATION_JSON)), articleHandler::fetchArticles)
+                 .route(GET("/article").and(accept(APPLICATION_JSON)), articleHandler::fetchArticle)
+                .andRoute(GET("/articles").and(accept(APPLICATION_JSON)), articleHandler::fetchArticles)
                 .andRoute(GET("/articles").and(accept(APPLICATION_STREAM_JSON)), articleHandler::streamArticles)
                 .andRoute(POST("/article").and(accept(APPLICATION_JSON_UTF8)), articleHandler::createArticle)
                 .andRoute(POST("/article/json"), articleHandler::createArticle);

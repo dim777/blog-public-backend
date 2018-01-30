@@ -28,6 +28,10 @@ public class Article {
     @Size(max = 300)
     private String alias;
 
+    @Indexed(unique = true)
+    @NotBlank
+    private String category;
+
     private String fulltext;
 
     private String created;
@@ -53,6 +57,12 @@ public class Article {
         this.alias = alias;
         return this;
     }
+
+    public Article category(String category){
+        this.category = category;
+        return this;
+    }
+
     public Article fulltext(String fulltext){
         this.fulltext = fulltext;
         return this;

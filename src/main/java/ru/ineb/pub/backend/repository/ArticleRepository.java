@@ -1,6 +1,7 @@
 package ru.ineb.pub.backend.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 
 /**
@@ -9,5 +10,5 @@ import ru.ineb.pub.backend.model.Article;
  * Please see distribution for license.
  */
 public interface ArticleRepository extends ReactiveMongoRepository<Article, Long> {
-    //Mono<Article> findById(Long id);
+    Mono<Article> findByAlias(String alias);
 }
