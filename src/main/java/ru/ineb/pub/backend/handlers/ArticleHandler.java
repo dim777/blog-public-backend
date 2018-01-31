@@ -37,6 +37,13 @@ public class ArticleHandler {
                 .body(articleRepository.findAll().take(size), Article.class);
     }
 
+    public Mono<ServerResponse> fetchFeturedArticles(ServerRequest request) {
+        boolean isFeatured = Boolean.parseBoolean(request.queryParam("featured").orElse("false"));
+        return ok()
+                .contentType(APPLICATION_JSON)
+                .body(articleRepository.findAll().take(size), Article.class);
+    }
+
 
     public Mono<ServerResponse> createArticle(ServerRequest request) {
         Flux<Article> article = request.bodyToFlux(Article.class);

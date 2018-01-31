@@ -44,9 +44,9 @@ public class PublicBackendApplicationTests {
 
 		articleRepository
 				.saveAll(Flux.just(
-						new Article().id(1L).alias("talias-1").created("sdsdsd"), //
-						new Article().id(2L).alias("talias-2").created("asasasa"), //
-						new Article().id(3L).alias("talias-3").created("ccxcxdf"))) //
+						new Article().id(1L).alias("talias-1").created("sdsdsd").category("category1"), //
+						new Article().id(2L).alias("talias-2").created("asasasa").category("category2"), //
+						new Article().id(3L).alias("talias-3").created("ccxcxdf").category("category3"))) //
 				.then() //
 				.block();
 
