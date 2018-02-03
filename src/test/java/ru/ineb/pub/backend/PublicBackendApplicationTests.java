@@ -21,6 +21,7 @@ import ru.ineb.pub.backend.model.FeaturedAttributes;
 import ru.ineb.pub.backend.model.Lang;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -48,9 +49,9 @@ public class PublicBackendApplicationTests {
 
 		articleRepository
 				.saveAll(Flux.just(
-						new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
-						new Article(2L, "bbb_bbb bbb", "talias-2", "category2", "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1)), //
-						new Article(3L, "ccc_ccc ccc", "talias-3", "category3", "ccc_ccc ccc ccc_ccc ccc", "19 Jun 2010", true, "dim777", null, Lang.EN, null))) //
+						new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
+						new Article(2L, "bbb_bbb bbb", "talias-2", Arrays.asList("category1", "category2"), "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1)), //
+						new Article(3L, "ccc_ccc ccc", "talias-3", Arrays.asList("category3"), "ccc_ccc ccc ccc_ccc ccc", "19 Jun 2010", true, "dim777", null, Lang.EN, null))) //
 				.then() //
 				.block();
 
@@ -117,7 +118,7 @@ public class PublicBackendApplicationTests {
 
 	@Test
 	public void givenArticleAlias_thenGetArticle() {
-	    Article expected = new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0));
+	    Article expected = new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0));
 
 		webTestClient
 				// We then create a GET request to test an endpoint
@@ -134,8 +135,8 @@ public class PublicBackendApplicationTests {
     public void givenFeatureArticles_then_receiveArticles() throws Exception {
 
         List<Article> expected = Arrays.asList(
-                new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
-                new Article(2L, "bbb_bbb bbb", "talias-2", "category2", "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1))
+                new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
+                new Article(2L, "bbb_bbb bbb", "talias-2", Arrays.asList("category1", "category2"), "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1))
         );
 
         webTestClient.get().uri("/articles/featured?size=20")

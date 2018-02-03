@@ -2,7 +2,7 @@
   "_id" : NumberLong(2),
   "title" : "bbb_bbb bbb",
   "alias" : "talias-2",
-  "category" : "category2",
+  "category" : [ "category2","category1"] ,
   "fulltext" : "bbb_bbb bbb bbb_bbb bbb",
   "created" : "20 May 1996",
   "publish" : true,

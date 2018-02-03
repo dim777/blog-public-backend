@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,9 +30,8 @@ public class Article {
     @Size(max = 300)
     private String alias;
 
-    @Indexed(unique = true)
     @NotBlank
-    private String category;
+    private List<String> category;
 
     private String fulltext;
 
@@ -49,7 +49,7 @@ public class Article {
 
     public Article(){}
 
-    public Article(Long id, @NotBlank @Size(max = 200) String title, @NotBlank @Size(max = 300) String alias, @NotBlank String category, String fulltext, String created, Boolean publish, String createdBy, Byte[] image, Lang language, FeaturedAttributes featuredAttributes) {
+    public Article(Long id, @NotBlank @Size(max = 200) String title, @NotBlank @Size(max = 300) String alias, @NotBlank List<String> category, String fulltext, String created, Boolean publish, String createdBy, Byte[] image, Lang language, FeaturedAttributes featuredAttributes) {
         this.id = id;
         this.title = title;
         this.alias = alias;
