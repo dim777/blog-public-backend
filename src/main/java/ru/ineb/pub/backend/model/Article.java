@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Optional;
 
 /**
  * Created by Dmitry.Erohin dim777@ya.ru on 07.03.2017.
@@ -44,47 +45,23 @@ public class Article {
 
     private Lang language;
 
-    public Article id(Long id){
+    private FeaturedAttributes featuredAttributes;
+
+    public Article(){}
+
+    public Article(Long id, @NotBlank @Size(max = 200) String title, @NotBlank @Size(max = 300) String alias, @NotBlank String category, String fulltext, String created, Boolean publish, String createdBy, Byte[] image, Lang language, FeaturedAttributes featuredAttributes) {
         this.id = id;
-        return this;
-    }
-
-    public Article title(String title){
         this.title = title;
-        return this;
-    }
-    public Article alias(String alias){
         this.alias = alias;
-        return this;
-    }
-
-    public Article category(String category){
         this.category = category;
-        return this;
-    }
-
-    public Article fulltext(String fulltext){
         this.fulltext = fulltext;
-        return this;
-    }
-    public Article created(String created){
         this.created = created;
-        return this;
-    }
-    public Article publish(Boolean publish){
         this.publish = publish;
-        return this;
-    }
-    public Article createdBy(String createdBy){
         this.createdBy = createdBy;
-        return this;
-    }
-    public Article image(Byte[] image){
         this.image = image;
-        return this;
-    }
-    public Article language(Lang language){
         this.language = language;
-        return this;
+        this.featuredAttributes = featuredAttributes;
     }
 }
+
+

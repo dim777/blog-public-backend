@@ -1,0 +1,42 @@
+{
+  "_id" : NumberLong(2),
+  "title" : "bbb_bbb bbb",
+  "alias" : "talias-2",
+  "category" : "category2",
+  "fulltext" : "bbb_bbb bbb bbb_bbb bbb",
+  "created" : "20 May 1996",
+  "publish" : true,
+  "createdBy" : "dim777",
+  "language" : "EN",
+  "featuredAttributes" : {
+    "bgImage" : "assert/img/file2.png",
+    "priority" : 0
+  }
+}
+
+{
+  "_id" : NumberLong(1),
+  "title" : "aaa_aaa aaa",
+  "alias" : "talias-1",
+  "category" : "category1",
+  "fulltext" : "aaa_aaa aaa aaa_aaa aaa",
+  "created" : "1 Apr 1990",
+  "publish" : true,
+  "createdBy" : "dim777",
+  "language" : "EN",
+  "featuredAttributes" : {
+    "bgImage" : "assert/img/file1.png",
+    "priority" : 0
+  }
+}
+{
+  "_id" : NumberLong(3),
+  "title" : "ccc_ccc ccc",
+  "alias" : "talias-3",
+  "category" : "category3",
+  "fulltext" : "ccc_ccc ccc ccc_ccc ccc",
+  "created" : "19 Jun 2010",
+  "publish" : true,
+  "createdBy" : "dim777",
+  "language" : "EN"
+}

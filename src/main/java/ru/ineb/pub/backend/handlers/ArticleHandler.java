@@ -12,8 +12,10 @@ import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
 import java.util.MissingFormatArgumentException;
+import java.util.stream.Stream;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
@@ -32,18 +34,21 @@ public class ArticleHandler {
 
     public Mono<ServerResponse> fetchArticles(ServerRequest request) {
         int size = Integer.parseInt(request.queryParam("size").orElse("10"));
+
         return ok()
                 .contentType(APPLICATION_JSON)
                 .body(articleRepository.findAll().take(size), Article.class);
     }
 
-    public Mono<ServerResponse> fetchFeturedArticles(ServerRequest request) {
-        boolean isFeatured = Boolean.parseBoolean(request.queryParam("featured").orElse("false"));
+    public Mono<ServerResponse> fetchFeaturedArticles(ServerRequest request) {
+        int size = Integer.parseInt(request.queryParam("size").orElse("10"));
         return ok()
-                .contentType(APPLICATION_JSON)
-                .body(articleRepository.findAll().take(size), Article.class);
+                .contentType(APPLICATION_JSON_UTF8)
+                .body(articleRepository
+                        .findByFeaturedAttributesIsNotNull()
+                        .sort((fa0, fa1) -> fa0.getFeaturedAttributes().getPriority() - fa1.getFeaturedAttributes().getPriority())
+                        .take(size), Article.class);
     }
-
 
     public Mono<ServerResponse> createArticle(ServerRequest request) {
         Flux<Article> article = request.bodyToFlux(Article.class);

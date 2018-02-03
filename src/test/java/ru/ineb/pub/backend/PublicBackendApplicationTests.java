@@ -17,8 +17,12 @@ import org.springframework.web.reactive.function.BodyInserters;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
+import ru.ineb.pub.backend.model.FeaturedAttributes;
 import ru.ineb.pub.backend.model.Lang;
 import ru.ineb.pub.backend.repository.ArticleRepository;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
@@ -44,9 +48,9 @@ public class PublicBackendApplicationTests {
 
 		articleRepository
 				.saveAll(Flux.just(
-						new Article().id(1L).alias("talias-1").created("sdsdsd").category("category1"), //
-						new Article().id(2L).alias("talias-2").created("asasasa").category("category2"), //
-						new Article().id(3L).alias("talias-3").created("ccxcxdf").category("category3"))) //
+						new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
+						new Article(2L, "bbb_bbb bbb", "talias-2", "category2", "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1)), //
+						new Article(3L, "ccc_ccc ccc", "talias-3", "category3", "ccc_ccc ccc ccc_ccc ccc", "19 Jun 2010", true, "dim777", null, Lang.EN, null))) //
 				.then() //
 				.block();
 
@@ -113,13 +117,34 @@ public class PublicBackendApplicationTests {
 
 	@Test
 	public void givenArticleAlias_thenGetArticle() {
+	    Article expected = new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0));
+
 		webTestClient
 				// We then create a GET request to test an endpoint
-				.get().uri("/article?alias=alias-1")
+				.get().uri("/article?alias=talias-1")
 				.accept(MediaType.APPLICATION_JSON)
 				.exchange()
 				.expectStatus().isOk()
 				.expectHeader().contentType(MediaType.APPLICATION_JSON)
-				.expectBody(Article.class);
+				.expectBody(Article.class)
+                .isEqualTo(expected);
 	}
+
+    @Test
+    public void givenFeatureArticles_then_receiveArticles() throws Exception {
+
+        List<Article> expected = Arrays.asList(
+                new Article(1L, "aaa_aaa aaa", "talias-1", "category1", "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
+                new Article(2L, "bbb_bbb bbb", "talias-2", "category2", "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1))
+        );
+
+        webTestClient.get().uri("/articles/featured?size=20")
+                .exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8)
+                .expectBodyList(Article.class)
+                .isEqualTo(expected);
+
+
+    }
 }
