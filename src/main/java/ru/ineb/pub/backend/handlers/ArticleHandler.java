@@ -1,7 +1,5 @@
 package ru.ineb.pub.backend.handlers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.server.ServerRequest;
@@ -11,19 +9,13 @@ import reactor.core.publisher.Mono;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.repository.ArticleRepository;
 
-import java.util.MissingFormatArgumentException;
-import java.util.stream.Stream;
+import java.util.Comparator;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.http.MediaType.APPLICATION_STREAM_JSON;
+import static org.springframework.http.MediaType.*;
 import static org.springframework.web.reactive.function.server.ServerResponse.ok;
 
 @Component
 public class ArticleHandler {
-    private static final Logger log = LoggerFactory.getLogger(ArticleHandler.class);
-    static Integer i;
-
     @Autowired private ArticleRepository articleRepository;
 
     public Mono<ServerResponse> streamArticles(ServerRequest request) {
@@ -46,7 +38,7 @@ public class ArticleHandler {
                 .contentType(APPLICATION_JSON_UTF8)
                 .body(articleRepository
                         .findByFeaturedAttributesIsNotNull()
-                        .sort((fa0, fa1) -> fa0.getFeaturedAttributes().getPriority() - fa1.getFeaturedAttributes().getPriority())
+                        .sort(Comparator.comparingInt(fa0 -> fa0.getFeaturedAttributes().getPriority()))
                         .take(size), Article.class);
     }
 

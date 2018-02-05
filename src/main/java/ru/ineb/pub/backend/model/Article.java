@@ -3,12 +3,12 @@ package ru.ineb.pub.backend.model;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by Dmitry.Erohin dim777@ya.ru on 07.03.2017.
@@ -30,8 +30,8 @@ public class Article {
     @Size(max = 300)
     private String alias;
 
-    @NotBlank
-    private List<String> category;
+    @DBRef
+    private List<Category> category;
 
     private String fulltext;
 
@@ -41,7 +41,7 @@ public class Article {
 
     private String createdBy;
 
-    private Byte[] image;
+    private String image;
 
     private Lang language;
 
@@ -49,7 +49,7 @@ public class Article {
 
     public Article(){}
 
-    public Article(Long id, @NotBlank @Size(max = 200) String title, @NotBlank @Size(max = 300) String alias, @NotBlank List<String> category, String fulltext, String created, Boolean publish, String createdBy, Byte[] image, Lang language, FeaturedAttributes featuredAttributes) {
+    public Article(Long id, @NotBlank @Size(max = 200) String title, @NotBlank @Size(max = 300) String alias, List<Category> category, String fulltext, String created, Boolean publish, String createdBy, String image, Lang language, FeaturedAttributes featuredAttributes) {
         this.id = id;
         this.title = title;
         this.alias = alias;

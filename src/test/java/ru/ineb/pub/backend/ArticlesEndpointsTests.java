@@ -1,11 +1,9 @@
 package ru.ineb.pub.backend;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.CollectionOptions;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,48 +12,26 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import ru.ineb.pub.backend.init.SetUpCollections;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.model.FeaturedAttributes;
 import ru.ineb.pub.backend.model.Lang;
 import ru.ineb.pub.backend.repository.ArticleRepository;
+import ru.ineb.pub.backend.repository.CategoryRepository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ActiveProfiles("test")
-public class PublicBackendApplicationTests {
+public class ArticlesEndpointsTests extends SetUpCollections{
 
-	@Autowired WebTestClient webTestClient;
+	@Autowired private WebTestClient webTestClient;
 
-	@Autowired ReactiveMongoOperations operations;
-	@Autowired ArticleRepository articleRepository;
-
-	@Before
-	public void setUp() {
-
-		operations.collectionExists(Article.class) //
-				.flatMap(exists -> exists ? operations.dropCollection(Article.class) : Mono.just(exists)) //
-				.flatMap(o -> operations.createCollection(Article.class, CollectionOptions.empty().size(1024 * 1024).maxDocuments( 100).capped())) //
-				.then() //
-				.block();
-
-		articleRepository
-				.saveAll(Flux.just(
-						new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
-						new Article(2L, "bbb_bbb bbb", "talias-2", Arrays.asList("category1", "category2"), "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1)), //
-						new Article(3L, "ccc_ccc ccc", "talias-3", Arrays.asList("category3"), "ccc_ccc ccc ccc_ccc ccc", "19 Jun 2010", true, "dim777", null, Lang.EN, null))) //
-				.then() //
-				.block();
-
-	}
+	@Autowired private ReactiveMongoOperations operations;
+	@Autowired private ArticleRepository articleRepository;
+	@Autowired private CategoryRepository categoryRepository;
 
 	@Test
 	public void givenRouter_whenGetArticles_thenGotArticlesList() {
@@ -118,7 +94,7 @@ public class PublicBackendApplicationTests {
 
 	@Test
 	public void givenArticleAlias_thenGetArticle() {
-	    Article expected = new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0));
+	    Article expected = new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList(categoryRepository.findById(1L).block()), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0));
 
 		webTestClient
 				// We then create a GET request to test an endpoint
@@ -133,10 +109,9 @@ public class PublicBackendApplicationTests {
 
     @Test
     public void givenFeatureArticles_then_receiveArticles() throws Exception {
-
         List<Article> expected = Arrays.asList(
-                new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList("category1"), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
-                new Article(2L, "bbb_bbb bbb", "talias-2", Arrays.asList("category1", "category2"), "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1))
+                new Article(1L, "aaa_aaa aaa", "talias-1", Arrays.asList(categoryRepository.findById(1L).block()), "aaa_aaa aaa aaa_aaa aaa", "1 Apr 1990", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file1.png", 0)), //
+                new Article(2L, "bbb_bbb bbb", "talias-2", Arrays.asList(categoryRepository.findById(1L).block(), categoryRepository.findById(2L).block()), "bbb_bbb bbb bbb_bbb bbb", "20 May 1996", true, "dim777", null, Lang.EN, new FeaturedAttributes("assert/img/file2.png", 1))
         );
 
         webTestClient.get().uri("/articles/featured?size=20")
