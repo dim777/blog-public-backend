@@ -2,4 +2,4 @@
 <h2>Prerequisites</h2>
 <p>Docker-compose should be installed in order to perform integration tests</p>
 <h2>Tests</h2>
-<p>gradle integrationTest</p>
+<p>./gradlew clean integrationTest</p>
