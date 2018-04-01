@@ -4,10 +4,8 @@ server:
 spring:
   data:
     mongodb:
-      host: mongod-vb0x.local
+      host: localhost
       port: 27017
-      database: blog_test_db
-      username: blog_test_db_usr
 
 logging:
   level:

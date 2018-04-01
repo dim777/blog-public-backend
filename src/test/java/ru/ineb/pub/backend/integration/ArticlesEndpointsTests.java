@@ -1,18 +1,14 @@
-package ru.ineb.pub.backend;
+package ru.ineb.pub.backend.integration;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.mongodb.core.ReactiveMongoOperations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.BodyInserters;
-import ru.ineb.pub.backend.init.SetUpCollections;
+import ru.ineb.pub.backend.integration.init.SetUpCollections;
 import ru.ineb.pub.backend.model.Article;
 import ru.ineb.pub.backend.model.FeaturedAttributes;
 import ru.ineb.pub.backend.model.Lang;

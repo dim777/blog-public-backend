@@ -4,7 +4,7 @@ server:
 spring:
   data:
     mongodb:
-      host: mongod-vb0x.local
+      host: mongod0
       port: 27017
       database: blog_db
       username: blog_usr
