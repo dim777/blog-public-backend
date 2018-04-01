@@ -42,12 +42,6 @@ dependencies {
     testCompile("com.palantir.docker.compose:docker-compose-rule-junit4:${dockerComposeRuleVersion}")
 }
 
-test {
-    useJUnit {
-        excludeCategories 'ru.ineb.pub.backend.integration.IntegrationTest'
-    }
-}
-
 task integrationTest(type: Test) {
     useJUnit {
         includeCategories 'ru.ineb.pub.backend.integration.IntegrationTest'
