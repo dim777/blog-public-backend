@@ -104,11 +104,14 @@ public class ArticlesEndpointsTests extends SetUpCollections{
 		formData.add("language", "RU");
 
 		webTestClient.post().uri("/article")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.body(BodyInserters.fromFormData(formData))
 				.exchange()
 				.expectStatus()
-				.isOk();
+				.isOk()
+		        .expectBody(String.class)
+                .isEqualTo("welcome back!");
+
 	}
 
 	/**
