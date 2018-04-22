@@ -28,7 +28,6 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.web.reactive.function.BodyInserters.fromObject;
 
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ArticlesEndpointsTests extends SetUpCollections{
 
