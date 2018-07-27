@@ -1,16 +1,14 @@
 buildscript {
-	ext {
-		springBootVersion = '2.0.1.RELEASE'
-		dockerComposeRuleVersion = '0.33.0'
-	}
-	repositories {
-		mavenCentral()
-		maven { url "https://repo.spring.io/snapshot" }
-		maven { url "https://repo.spring.io/milestone" }
-	}
-	dependencies {
-		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-	}
+    ext {
+        springBootVersion = '2.0.3.RELEASE'
+        dockerComposeRuleVersion = '0.34.0'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
 }
 
 apply plugin: 'java'
@@ -23,7 +21,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-	mavenCentral()
+    mavenCentral()
     maven {
         url 'https://dl.bintray.com/palantir/releases'
     }
@@ -31,21 +29,21 @@ repositories {
 
 
 dependencies {
-	compile('org.springframework.boot:spring-boot-starter-data-redis')
-	compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
-	compile('org.springframework.boot:spring-boot-starter-webflux')
+    compile('org.springframework.boot:spring-boot-starter-data-redis')
+    compile('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
+    compile('org.springframework.boot:spring-boot-starter-webflux')
 //	compile('org.springframework.boot:spring-boot-starter-security-reactive')
-	compileOnly('org.projectlombok:lombok')
-	testCompile('org.springframework.boot:spring-boot-starter-test')
-	testCompile('org.springframework.security:spring-security-test')
-	testCompile('io.projectreactor:reactor-test')
+    compileOnly('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
+    testCompile('io.projectreactor:reactor-test')
     testCompile("com.palantir.docker.compose:docker-compose-rule-junit4:${dockerComposeRuleVersion}")
 }
 
 test {
-	useJUnit {
-		excludeCategories 'ru.ineb.pub.backend.integration.IntegrationTest'
-	}
+    useJUnit {
+        excludeCategories 'ru.ineb.pub.backend.integration.IntegrationTest'
+    }
 }
 
 task integrationTest(type: Test) {
